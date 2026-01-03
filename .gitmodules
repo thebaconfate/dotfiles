@@ -7,3 +7,6 @@
 [submodule "tmux-config"]
 	path = tmux-config
 	url = git@github.com:thebaconfate/tmux-config.git
+[submodule "ideavim-config"]
+	path = ideavim-config
+	url = git@github.com:thebaconfate/ideavim-config.git

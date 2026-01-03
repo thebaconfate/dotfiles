@@ -1,3 +1,6 @@
 [submodule "nvim"]
 	path = nvim-config
 	url = git@github.com:thebaconfate/nvim-odin.git
+[submodule "zsh-config"]
+	path = zsh-config
+	url = git@github.com:thebaconfate/zsh-config.git

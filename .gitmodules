@@ -4,3 +4,6 @@
 [submodule "zsh-config"]
 	path = zsh-config
 	url = git@github.com:thebaconfate/zsh-config.git
+[submodule "tmux-config"]
+	path = tmux-config
+	url = git@github.com:thebaconfate/tmux-config.git

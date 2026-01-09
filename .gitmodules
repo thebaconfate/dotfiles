@@ -10,3 +10,6 @@
 [submodule "ideavim-config"]
 	path = ideavim-config
 	url = git@github.com:thebaconfate/ideavim-config.git
+[submodule "pwsh-config"]
+	path = pwsh-config
+	url = git@github.com:thebaconfate/pwsh-config.git

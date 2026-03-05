@@ -13,3 +13,6 @@
 [submodule "pwsh-config"]
 	path = pwsh-config
 	url = git@github.com:thebaconfate/pwsh-config.git
+[submodule "alacritty-config"]
+	path = alacritty-config
+	url = git@github.com:thebaconfate/alacritty-config.git

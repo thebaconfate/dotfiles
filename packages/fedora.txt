@@ -1,0 +1,42 @@
+# The usual Fedora packages, installed by os/fedora.sh. Each [group] is asked about
+# separately, so a machine can skip one (gaming on the Surface, say). One package per line;
+# everything after a # is ignored. os/fedora.sh adds the repos some of these need: RPM Fusion
+# (discord, steam, lpf-spotify-client), Brave's and Docker's.
+#
+# Not here because something else installs them: neovim, ripgrep, fd and the build tools
+# (nvim-config/install.sh), tmux (tmux-config), fzf and zoxide (zsh-config), Node (mise).
+
+[core]
+git-core
+zsh
+curl
+unzip
+pciutils          # lspci, used to detect an NVIDIA GPU
+xclip             # clipboard on X11
+wl-clipboard      # clipboard on Wayland, the KDE default
+alacritty
+
+[dev]
+maven
+
+[latex]           # texlab in Neovim
+latexmk
+texlive-scheme-medium
+texlive-roboto
+texlive-datetime2
+
+[apps]
+brave-browser
+discord
+lpf-spotify-client   # builds the Spotify package; finishing it needs a logout, see the README
+
+[docker]
+docker-ce
+docker-ce-cli
+containerd.io
+docker-buildx-plugin
+docker-compose-plugin
+
+[gaming]
+steam
+wine

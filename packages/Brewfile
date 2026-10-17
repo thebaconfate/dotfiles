@@ -1,0 +1,43 @@
+# The usual macOS tools, installed by os/macos.sh with `brew bundle install`.
+# Node and Python come from mise (install.sh), not Homebrew, which is why fnm, nvm and pyenv
+# aren't listed. Alacritty isn't either: Homebrew disabled its cask (see os/macos.sh).
+
+# Shell and command line
+brew "bash"       # macOS ships bash 3.2
+brew "bc"
+brew "coreutils"  # GNU ls, date, ... (g-prefixed)
+brew "gawk"
+brew "gnu-sed"
+brew "fzf"
+brew "jq"
+brew "ripgrep"
+brew "thefuck"
+brew "tmux"
+brew "zoxide"
+
+# Development
+brew "cargo-binstall"
+brew "gh"
+brew "pnpm"
+cask "visual-studio-code"
+
+# Containers: colima runs the Docker engine without Docker Desktop
+brew "colima"
+brew "docker"
+brew "docker-buildx"
+brew "docker-compose"
+brew "docker-credential-helper"
+cask "docker-desktop"
+
+# Work
+brew "kubernetes-cli"
+brew "postgresql@17"
+cask "dbeaver-community"
+cask "gcloud-cli"
+cask "postman"
+
+# LaTeX (texlab in Neovim)
+cask "basictex"
+
+# Apps
+cask "spotify"

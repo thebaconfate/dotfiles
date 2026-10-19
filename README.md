@@ -32,7 +32,7 @@ safe to re-run:
 1. **Tools**: everything in `packages/Brewfile` (macOS) or `packages/fedora.txt` (Fedora,
    asked per group, so the Surface can skip `[gaming]`). On Fedora also a system upgrade,
    the hostname, RPM Fusion, the Brave and Docker repos, and zsh as the login shell.
-2. **mise + Node**: the Neovim config needs Node for its formatters.
+2. **mise + Node and Python**: links `mise/global.toml` as the global mise config, then installs what it pins. The Neovim config needs Node for its formatters.
 3. **CodeNewRoman Nerd Font**, into `~/Library/Fonts` or `~/.local/share/fonts`.
 4. **Configs**: each submodule you pick, set up by its own `install.sh`. Your answers are
    remembered in `.git/config`, so later runs only ask about new configs.

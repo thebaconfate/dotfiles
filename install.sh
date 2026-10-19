@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Sets up a macOS or Fedora machine from these dotfiles, asking before each part:
 #   1. the usual tools: packages/Brewfile on macOS, packages/fedora.txt on Fedora
-#   2. mise with Node, which the Neovim config needs for its formatters
+#   2. mise with Node and Python (mise/global.toml), which the Neovim config needs for its
+#      formatters
 #   3. the CodeNewRoman Nerd Font
 #   4. the configs (submodules) you pick, each set up by its own install.sh
 #   5. drivers for hardware it finds: an NVIDIA GPU, a Microsoft Surface (Linux only)
@@ -81,11 +82,11 @@ step_tools() {
     esac
 }
 
-# 2. mise + Node ----------------------------------------------------------------------------
+# 2. mise + Node and Python -----------------------------------------------------------------
 
 step_runtimes() {
-    log "mise + Node"
-    ask "Install mise and Node (needed by the Neovim formatters)?" y || return 0
+    log "mise + Node and Python"
+    ask "Install mise, Node and Python (needed by the Neovim formatters)?" y || return 0
     export PATH="$HOME/.local/bin:$PATH"
     if has mise; then
         info "mise: already installed"
@@ -94,17 +95,16 @@ step_runtimes() {
         run sh -c 'curl -fsSL https://mise.run | sh'
     fi
     if ! has mise; then
-        info "node: would install the LTS through mise"
+        info "node + python: would install them through mise"
         return 0
     fi
-    # Keep a Node version that's already pinned globally; otherwise pin the current LTS
-    if grep -qs '^node' "${XDG_CONFIG_HOME:-$HOME/.config}/mise/config.toml"; then
-        info "node: installing the globally pinned version"
-        run mise install
-    else
-        info "node: pinning the LTS globally"
-        run mise use -g node@lts
-    fi
+    # The global config comes from the repo (mise/global.toml), so every machine gets the same
+    # Node and Python; an existing one is moved aside to config.toml.bak
+    local mise_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mise"
+    run mkdir -p "$mise_dir"
+    link "$DOTFILES/mise/global.toml" "$mise_dir/config.toml"
+    info "node + python: installing the versions in mise/global.toml"
+    run mise install
     # Later steps run without `mise activate`, so they find node and npm through the shims
     export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/mise/shims:$PATH"
 }

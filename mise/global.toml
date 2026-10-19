@@ -1,0 +1,10 @@
+# Your global mise config: install.sh links it to ~/.config/mise/config.toml.
+# (Not named mise/config.toml: mise would also load that as a project config inside
+# ~/.dotfiles, and ask to trust it.) Configs add their own tools through
+# ~/.config/mise/conf.d/, e.g. nvim-config/mise/nvim.toml.
+[tools]
+node = "24"
+python = "3.12"
+
+[settings]
+idiomatic_version_file_enable_tools = ["python"]

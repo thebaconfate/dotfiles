@@ -1,10 +1,12 @@
 # The usual Fedora packages, installed by os/fedora.sh. Each [group] is asked about
 # separately, so a machine can skip one (gaming on the Surface, say). One package per line;
 # everything after a # is ignored. os/fedora.sh adds the repos some of these need: RPM Fusion
-# (discord, steam, lpf-spotify-client), Brave's and Docker's.
+# (discord, steam, lpf-spotify-client), Brave's and Docker's (for the docker CLI).
 #
-# Not here because something else installs them: neovim, ripgrep, fd and the build tools
-# (nvim-config/install.sh), tmux (tmux-config), fzf and zoxide (zsh-config), Node (mise).
+# Not here because something else installs them: neovim and the build tools
+# (nvim-config/install.sh), tmux (tmux-config), and through mise (with dnf as the fallback
+# without it): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven and colima
+# (mise/global.toml), fd and ripgrep (nvim-config), fzf and zoxide (zsh-config).
 
 [core]
 git-core
@@ -15,9 +17,6 @@ pciutils          # lspci, used to detect an NVIDIA GPU
 xclip             # clipboard on X11
 wl-clipboard      # clipboard on Wayland, the KDE default
 alacritty
-
-[dev]
-maven
 
 [latex]           # texlab in Neovim
 latexmk
@@ -30,12 +29,12 @@ brave-browser
 discord
 lpf-spotify-client   # builds the Spotify package; finishing it needs a logout, see the README
 
-[docker]
-docker-ce
+[docker]          # the CLI and its plugins; the engine runs in colima's VM (colima from mise)
 docker-ce-cli
-containerd.io
 docker-buildx-plugin
 docker-compose-plugin
+qemu-kvm          # lima runs colima's VM in QEMU on Linux
+qemu-img
 
 [gaming]
 steam

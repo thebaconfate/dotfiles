@@ -84,9 +84,28 @@ step_tools() {
 
 # 2. mise + Node and Python -----------------------------------------------------------------
 
+# Without mise, the command line tools in mise/global.toml come from the package manager.
+# Fedora has no pnpm, cargo-binstall or colima package, and kubectl only under versioned names.
+tools_without_mise() {
+    case "$OS" in
+        macos)
+            info "tools: installing jq, kubectl, pnpm, cargo-binstall, maven and colima with Homebrew"
+            run brew install jq kubernetes-cli pnpm cargo-binstall maven colima
+            ;;
+        fedora)
+            info "tools: installing jq and maven with dnf (pnpm, cargo-binstall, kubectl, colima: by hand)"
+            run sudo dnf install -y jq maven
+            ;;
+        *) info "tools: no package list for $OS; install jq, kubectl, pnpm, cargo-binstall, maven and colima by hand" ;;
+    esac
+}
+
 step_runtimes() {
     log "mise + Node and Python"
-    ask "Install mise, Node and Python (needed by the Neovim formatters)?" y || return 0
+    if ! ask "Install mise, Node, Python and the command line tools in mise/global.toml?" y; then
+        tools_without_mise
+        return 0
+    fi
     export PATH="$HOME/.local/bin:$PATH"
     if has mise; then
         info "mise: already installed"
@@ -103,7 +122,7 @@ step_runtimes() {
     local mise_dir="${XDG_CONFIG_HOME:-$HOME/.config}/mise"
     run mkdir -p "$mise_dir"
     link "$DOTFILES/mise/global.toml" "$mise_dir/config.toml"
-    info "node + python: installing the versions in mise/global.toml"
+    info "node, python and the command line tools: installing the versions in mise/global.toml"
     run mise install
     # Later steps run without `mise activate`, so they find node and npm through the shims
     export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/mise/shims:$PATH"

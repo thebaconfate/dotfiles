@@ -1,6 +1,8 @@
 # The usual macOS tools, installed by os/macos.sh with `brew bundle install`.
-# Node and Python come from mise (install.sh), not Homebrew, which is why fnm, nvm and pyenv
-# aren't listed. Alacritty isn't either: Homebrew disabled its cask (see os/macos.sh).
+# Command line tools come from mise instead where it can install them (mise/global.toml, and
+# the configs' own mise/*.toml): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven, colima,
+# fzf, zoxide, fd, ripgrep. Without mise, install.sh and the configs' install.sh files get those
+# from Homebrew. Alacritty isn't listed either: Homebrew disabled its cask (see os/macos.sh).
 
 # Shell and command line
 brew "bash"       # macOS ships bash 3.2
@@ -8,21 +10,15 @@ brew "bc"
 brew "coreutils"  # GNU ls, date, ... (g-prefixed)
 brew "gawk"
 brew "gnu-sed"
-brew "fzf"
-brew "jq"
-brew "ripgrep"
-brew "thefuck"
+brew "thefuck"    # not in mise's registry, and the PyPI release breaks on Python 3.12+
 brew "tmux"
-brew "zoxide"
 
 # Development
-brew "cargo-binstall"
-brew "gh"
-brew "pnpm"
+brew "gh"         # bootstrap.sh needs it before the dotfiles, and so mise, are there
 cask "visual-studio-code"
 
-# Containers: colima runs the Docker engine without Docker Desktop
-brew "colima"
+# Containers: colima (from mise, mise/global.toml) runs the Docker engine without Docker
+# Desktop; these are the CLI and its plugins
 brew "docker"
 brew "docker-buildx"
 brew "docker-compose"
@@ -30,7 +26,6 @@ brew "docker-credential-helper"
 cask "docker-desktop"
 
 # Work
-brew "kubernetes-cli"
 brew "postgresql@17"
 cask "dbeaver-community"
 cask "gcloud-cli"

@@ -81,9 +81,9 @@ wants() {
 if wants brave-browser; then
     add_repo brave-browser https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 fi
-if wants docker-ce; then
+if wants docker-ce-cli; then
     add_repo docker-ce https://download.docker.com/linux/fedora/docker-ce.repo
-    # Fedora's own Docker packages conflict with Docker CE
+    # Fedora's own Docker packages conflict with Docker CE's
     old=()
     for package in docker docker-client docker-client-latest docker-common docker-latest \
         docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine; do
@@ -99,18 +99,10 @@ info "installing ${#selected[@]} packages"
 run sudo dnf install -y "${selected[@]}"
 
 # 5. What some packages need after installing
-if wants docker-ce; then
-    if systemctl is-enabled --quiet docker 2>/dev/null; then
-        info "docker: service already enabled"
-    else
-        run sudo systemctl enable --now docker
-    fi
-    if id -nG "$USER" | grep -qw docker; then
-        info "docker: $USER already in the docker group"
-    else
-        run sudo usermod -aG docker "$USER"
-        note "Log out and back in so docker works without sudo"
-    fi
+# The engine runs in colima's VM, as your own user: no docker service, and no docker group.
+# A machine set up before that still has Docker CE's engine.
+if wants docker-ce-cli && rpm -q docker-ce >/dev/null 2>&1; then
+    note "Docker: the engine now runs in colima. To drop Docker CE's: sudo systemctl disable --now docker docker.socket containerd, sudo dnf remove docker-ce containerd.io, then colima start"
 fi
 
 if wants lpf-spotify-client && ! rpm -q spotify-client >/dev/null 2>&1; then

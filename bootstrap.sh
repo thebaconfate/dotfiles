@@ -219,7 +219,10 @@ configure_git() {
         set_if_unset user.signingkey "$KEY.pub"
         set_if_unset commit.gpgsign true
     fi
-    set_if_unset core.editor nvim
+    # vim until Neovim is there: nvim-config/install.sh switches both to Neovim, unless you've
+    # set something else yourself
+    set_if_unset core.editor vim
+    set_if_unset merge.tool vimdiff
 }
 
 # 4. Clone ----------------------------------------------------------------------------------

@@ -47,7 +47,9 @@ run = [
 [tasks."update:dotfiles"]
 description = "Pull the dotfiles, and each config on the branch it's on (fast-forward only)"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
+quiet = true
 run = '''
+echo "==> Pulling the dotfiles and configs"
 git pull --ff-only || echo "dotfiles: not pulled (diverged from upstream?)"
 # On their own branches, like install.sh does: `git submodule update` would detach them
 git submodule foreach --quiet 'git pull --ff-only --quiet || echo "$sm_path: not pulled (no upstream, or diverged)"'
@@ -56,7 +58,9 @@ git submodule foreach --quiet 'git pull --ff-only --quiet || echo "$sm_path: not
 [tasks."update:packages"]
 description = "Upgrade system packages without asking: the Brewfile on macOS, dnf on Fedora"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
+quiet = true
 run = '''
+echo "==> Upgrading system packages"
 if [ "$(uname)" = Darwin ]; then
     brew update
     # Installs what the Brewfile gained and upgrades what's in it; other formulae stay as they are.
@@ -78,9 +82,11 @@ fi
 
 [tasks."update:mise"]
 description = "Update mise itself and the tools it manages, keeping global npm packages"
+quiet = true
 run = '''
 #!/usr/bin/env bash
 set -euo pipefail
+echo "==> Updating mise and its tools"
 mise self-update --yes || echo "mise: no self-update (installed by a package manager?), skipped"
 
 # Global npm packages belong to one exact Node version. mise gives a new Node the ones in
@@ -110,9 +116,13 @@ fi
 [tasks."update:nvim"]
 description = "Update Neovim, its plugins and Mason tools (skipped where Neovim isn't installed)"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
+quiet = true
 run = '''
+echo "==> Updating Neovim, its plugins and Mason tools"
 if command -v nvim >/dev/null 2>&1 && [ -x nvim-config/install.sh ]; then
     nvim-config/install.sh --update
+else
+    echo "nvim: not installed, skipped"
 fi
 '''
 

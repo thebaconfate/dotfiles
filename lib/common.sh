@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Helpers shared by install.sh and the scripts under os/ and hardware/. Sourced, not run.
 # DRY_RUN, ASSUME_YES and NOTES_FILE come from install.sh through the environment, so a
 # script started on its own still works: it then runs for real and asks its own questions.

@@ -27,6 +27,9 @@ uv = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
 
+[settings.self_update]
+auto = true
+
 # Global tasks, run from any folder: `mise run update`, or one part of it (`mise tasks` lists
 # them). The ones that need the dotfiles run in ~/.dotfiles, or $DOTFILES_DIR as with
 # bootstrap.sh. (Not found by following the config.toml link: a [vars] exec() for that would
@@ -95,9 +98,11 @@ if [[ -n "$old" && -n "$new" && "$old" != "$new" && -d "$old/lib/node_modules" ]
         echo "node: carrying $name over from $(basename "$old")"
         (cd "$tmp" && "$new/bin/npm" pack --silent "$dir" >/dev/null)
     done
+    # Counted with $#, not an array length: mise renders this script as a Tera template, where
+    # an opening brace followed by a hash starts a comment
     shopt -s nullglob
-    tarballs=("$tmp"/*.tgz)
-    if ((${#tarballs[@]})); then "$new/bin/npm" install -g "${tarballs[@]}"; fi
+    set -- "$tmp"/*.tgz
+    if (($#)); then "$new/bin/npm" install -g "$@"; fi
     rm -rf "$tmp"
 fi
 '''

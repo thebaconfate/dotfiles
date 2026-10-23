@@ -7,7 +7,7 @@
 node = "lts"
 # A minor version, not "latest": Mason's Python tools are venvs tied to it, so bump it on
 # purpose, then run nvim-config/install.sh --update to rebuild them
-python = "3.14"
+python = "3.15"
 
 # Command line tools, the same on macOS and Fedora. Without mise, install.sh gets them from
 # Homebrew or dnf instead (step_runtimes). fzf and zoxide are zsh-config's (mise/zsh.toml),

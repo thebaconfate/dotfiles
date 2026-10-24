@@ -5,8 +5,8 @@
 #
 # Not here because something else installs them: neovim and the build tools
 # (nvim-config/install.sh), tmux (tmux-config), and through mise (with dnf as the fallback
-# without it): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven and colima
-# (mise/global.toml), fd and ripgrep (nvim-config), fzf and zoxide (zsh-config).
+# without it): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven, colima, lazydocker
+# and pgcli (mise/global.toml), fd and ripgrep (nvim-config), fzf, zoxide and bat (zsh-config).
 
 [core]
 git-core
@@ -16,6 +16,7 @@ unzip
 pciutils          # lspci, used to detect an NVIDIA GPU
 xclip             # clipboard on X11
 wl-clipboard      # clipboard on Wayland, the KDE default
+btop              # here, not mise: dnf's build shows the NVIDIA GPU
 alacritty
 
 [latex]           # texlab in Neovim

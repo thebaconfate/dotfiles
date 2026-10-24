@@ -1,8 +1,9 @@
 # The usual macOS tools, installed by os/macos.sh with `brew bundle install`.
 # Command line tools come from mise instead where it can install them (mise/global.toml, and
 # the configs' own mise/*.toml): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven, colima,
-# fzf, zoxide, fd, ripgrep. Without mise, install.sh and the configs' install.sh files get those
-# from Homebrew. Alacritty isn't listed either: Homebrew disabled its cask (see os/macos.sh).
+# lazydocker, btop, pgcli, fzf, zoxide, bat, fd, ripgrep. Without mise, install.sh and the configs'
+# install.sh files get those from Homebrew. Alacritty isn't listed either: Homebrew disabled its
+# cask (see os/macos.sh).
 
 # Shell and command line
 brew "bash"       # macOS ships bash 3.2

@@ -10,7 +10,7 @@ node = "lts"
 python = "3.15"
 
 # Command line tools, the same on macOS and Fedora. Without mise, install.sh gets them from
-# Homebrew or dnf instead (step_runtimes). fzf and zoxide are zsh-config's (mise/zsh.toml),
+# Homebrew or dnf instead (step_runtimes). fzf, zoxide and bat are zsh-config's (mise/zsh.toml),
 # fd and ripgrep nvim-config's (mise/nvim.toml).
 jq = "latest"
 kubectl = "latest"
@@ -22,7 +22,12 @@ maven = "latest"         # needs Java, which nvim-config's mise/nvim.toml brings
 # on Linux, lima also needs QEMU from the package manager.
 colima = "latest"
 lima = "latest"
+lazydocker = "latest"    # a terminal UI for colima's containers
 uv = "latest"
+# Only on macOS: mise's Linux build has no GPU support, so Fedora gets btop from dnf
+# (packages/fedora.txt), whose build shows the NVIDIA GPU
+btop = { version = "latest", os = ["macos"] }
+"pipx:pgcli" = "latest" # not in mise's registry; a Python tool, so it's tied to the Python above
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]

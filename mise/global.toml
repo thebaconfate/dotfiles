@@ -38,7 +38,7 @@ auto = true
 # Global tasks, run from any folder: `mise run update`, or one part of it (`mise tasks` lists
 # them). The ones that need the dotfiles run in ~/.dotfiles, or $DOTFILES_DIR as with
 # bootstrap.sh. (Not found by following the config.toml link: a [vars] exec() for that would
-# run on every mise call, the prompt hook included.)
+# run on every mise call, the prompt hook included.) The update scripts are in mise/scripts/.
 
 [tasks.update]
 description = "Update everything: the dotfiles, system packages, mise tools and Neovim"
@@ -53,83 +53,25 @@ run = [
 description = "Pull the dotfiles, and each config on the branch it's on (fast-forward only)"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
 quiet = true
-run = '''
-echo "==> Pulling the dotfiles and configs"
-git pull --ff-only || echo "dotfiles: not pulled (diverged from upstream?)"
-# On their own branches, like install.sh does: `git submodule update` would detach them
-git submodule foreach --quiet 'git pull --ff-only --quiet || echo "$sm_path: not pulled (no upstream, or diverged)"'
-'''
+run = "mise/scripts/update-dotfiles.sh"
 
 [tasks."update:packages"]
 description = "Upgrade system packages without asking: the Brewfile on macOS, dnf on Fedora"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
 quiet = true
-run = '''
-echo "==> Upgrading system packages"
-if [ "$(uname)" = Darwin ]; then
-    brew update
-    # Installs what the Brewfile gained and upgrades what's in it; other formulae stay as they are.
-    # brew bundle has no --yes; HOMEBREW_NO_ASK is the one its brew install/upgrade calls follow
-    HOMEBREW_NO_ASK=1 brew bundle install --file packages/Brewfile
-elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf upgrade --refresh --assumeyes
-    # The NVIDIA driver (RPM Fusion's akmod-nvidia) is built per kernel, at boot otherwise:
-    # build it now for the newest kernel, so the first boot into it doesn't come up without
-    # it. akmods skips what's already built, so this is quick when nothing changed.
-    if rpm -q akmod-nvidia >/dev/null 2>&1; then
-        kernel="$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}\n' kernel-core | sort -V | tail -n 1)"
-        sudo akmods --kernels "$kernel"
-    fi
-else
-    echo "packages: no Homebrew or dnf here, skipped"
-fi
-'''
+run = "mise/scripts/update-packages.sh"
 
 [tasks."update:mise"]
 description = "Update mise itself and the tools it manages, keeping global npm packages"
+dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
 quiet = true
-run = '''
-#!/usr/bin/env bash
-set -euo pipefail
-echo "==> Updating mise and its tools"
-mise self-update --yes || echo "mise: no self-update (installed by a package manager?), skipped"
-
-# Global npm packages belong to one exact Node version. mise gives a new Node the ones in
-# ~/.default-npm-packages, but not the rest (from a private registry, a tarball, ...), so
-# those are packed from the old Node, which `mise upgrade` keeps for a day, and installed again.
-old="$(mise where node 2>/dev/null || true)"
-mise upgrade
-new="$(mise where node 2>/dev/null || true)"
-if [[ -n "$old" && -n "$new" && "$old" != "$new" && -d "$old/lib/node_modules" ]]; then
-    tmp="$(mktemp -d)"
-    for dir in "$old"/lib/node_modules/[!@]* "$old"/lib/node_modules/@*/*; do
-        [[ -d "$dir" ]] || continue
-        name="${dir#"$old"/lib/node_modules/}"
-        [[ "$name" == npm || "$name" == corepack || -d "$new/lib/node_modules/$name" ]] && continue
-        echo "node: carrying $name over from $(basename "$old")"
-        (cd "$tmp" && "$new/bin/npm" pack --silent "$dir" >/dev/null)
-    done
-    # Counted with $#, not an array length: mise renders this script as a Tera template, where
-    # an opening brace followed by a hash starts a comment
-    shopt -s nullglob
-    set -- "$tmp"/*.tgz
-    if (($#)); then "$new/bin/npm" install -g "$@"; fi
-    rm -rf "$tmp"
-fi
-'''
+run = "mise/scripts/update-mise.sh"
 
 [tasks."update:nvim"]
 description = "Update Neovim, its plugins and Mason tools (skipped where Neovim isn't installed)"
 dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
 quiet = true
-run = '''
-echo "==> Updating Neovim, its plugins and Mason tools"
-if command -v nvim >/dev/null 2>&1 && [ -x nvim-config/install.sh ]; then
-    nvim-config/install.sh --update
-else
-    echo "nvim: not installed, skipped"
-fi
-'''
+run = "mise/scripts/update-nvim.sh"
 
 [tasks.lint]
 description = "shellcheck every shell script in the dotfiles and its configs"

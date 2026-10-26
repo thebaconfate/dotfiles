@@ -1,7 +1,7 @@
 # The usual macOS tools, installed by os/macos.sh with `brew bundle install`.
 # Command line tools come from mise instead where it can install them (mise/global.toml, and
 # the configs' own mise/*.toml): Node, Python, jq, kubectl, pnpm, cargo-binstall, maven, colima,
-# lazydocker, btop, pgcli, fzf, zoxide, bat, fd, ripgrep. Without mise, install.sh and the configs'
+# lazydocker, pgcli, fzf, zoxide, bat, fd, ripgrep. Without mise, install.sh and the configs'
 # install.sh files get those from Homebrew. Alacritty isn't listed either: Homebrew disabled its
 # cask (see os/macos.sh).
 
@@ -11,6 +11,7 @@ brew "bc"
 brew "coreutils"  # GNU ls, date, ... (g-prefixed)
 brew "gawk"
 brew "gnu-sed"
+brew "btop"       # not from mise: btop's own releases are Linux-only
 brew "thefuck"    # not in mise's registry, and the PyPI release breaks on Python 3.12+
 brew "tmux"
 

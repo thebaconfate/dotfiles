@@ -86,18 +86,18 @@ step_tools() {
 
 # Without mise, the command line tools in mise/global.toml come from the package manager.
 # Fedora has no pnpm, cargo-binstall, colima or lazydocker package, and kubectl only under
-# versioned names; its btop comes from packages/fedora.txt.
+# versioned names. btop comes from the Brewfile and packages/fedora.txt instead.
 tools_without_mise() {
     case "$OS" in
         macos)
-            info "tools: installing jq, kubectl, pnpm, cargo-binstall, maven, colima, lazydocker, btop and pgcli with Homebrew"
-            run brew install jq kubernetes-cli pnpm cargo-binstall maven colima lazydocker btop pgcli
+            info "tools: installing jq, kubectl, pnpm, cargo-binstall, maven, colima, lazydocker and pgcli with Homebrew"
+            run brew install jq kubernetes-cli pnpm cargo-binstall maven colima lazydocker pgcli
             ;;
         fedora)
             info "tools: installing jq, maven and pgcli with dnf (pnpm, cargo-binstall, kubectl, colima, lazydocker: by hand)"
             run sudo dnf install -y jq maven pgcli
             ;;
-        *) info "tools: no package list for $OS; install jq, kubectl, pnpm, cargo-binstall, maven, colima, lazydocker, btop and pgcli by hand" ;;
+        *) info "tools: no package list for $OS; install jq, kubectl, pnpm, cargo-binstall, maven, colima, lazydocker and pgcli by hand" ;;
     esac
 }
 

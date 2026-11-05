@@ -39,12 +39,10 @@ auto = true
 
 [tasks.update]
 description = "Update everything: the dotfiles, system packages, mise tools and Neovim"
-run = [
-    { task = "update:dotfiles" },
-    { task = "update:packages" },
-    { task = "update:mise" },
-    { task = "update:nvim" },
-]
+dir = "{{ get_env(name='DOTFILES_DIR', default=env.HOME ~ '/.dotfiles') }}"
+quiet = true
+# A script, not a list of tasks: it asks for sudo before the first one and keeps it fresh
+run = "mise/scripts/update.sh"
 
 [tasks."update:dotfiles"]
 description = "Pull the dotfiles, and each config on the branch it's on (fast-forward only)"

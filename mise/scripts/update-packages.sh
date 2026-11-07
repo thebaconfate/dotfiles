@@ -11,6 +11,13 @@ if [[ "$(uname)" == Darwin ]]; then
     HOMEBREW_NO_ASK=1 brew bundle install --file packages/Brewfile
 elif command -v dnf >/dev/null 2>&1; then
     sudo dnf upgrade --refresh --assumeyes
+    # Unlike brew bundle, dnf upgrade doesn't install what packages/fedora.txt gained since a
+    # machine was set up. gh is in [core] and every machine needs it, so add it when missing.
+    # (The other groups can be skipped on purpose, so they're left to os/fedora.sh.)
+    if ! rpm -q gh >/dev/null 2>&1; then
+        echo "gh: installing"
+        sudo dnf install --assumeyes gh
+    fi
     # The NVIDIA driver (RPM Fusion's akmod-nvidia) is built per kernel, at boot otherwise:
     # build it now for the newest kernel, so the first boot into it doesn't come up without
     # it. akmods skips what's already built, so this is quick when nothing changed.

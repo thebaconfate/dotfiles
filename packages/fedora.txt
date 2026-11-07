@@ -10,6 +10,7 @@
 
 [core]
 git-core
+gh                # also installed by bootstrap.sh, which needs it before the dotfiles are there
 zsh
 curl
 unzip

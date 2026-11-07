@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Stands in for qemu-system-x86_64 when colima (through Lima) starts its VM on Linux; set as
+# QEMU_SYSTEM_X86_64 in mise/global.toml.
+# Works around https://gitlab.com/qemu-project/qemu/-/work_items/3285 (Lima:
+# https://github.com/lima-vm/lima/issues/5722): QEMU builds with io_uring, Fedora's among them,
+# abort under network load ("net_fill_rstate: Assertion `size == 0' failed") on the socket
+# netdev that colima's user-v2 network uses. The equivalent stream netdev doesn't.
+# `mise run update` says when QEMU has closed the bug (mise/scripts/update-packages.sh).
+args=()
+for arg in "$@"; do
+    if [[ "$arg" =~ ^socket,id=([^,]+),fd=([0-9]+)$ ]]; then
+        arg="stream,id=${BASH_REMATCH[1]},addr.type=fd,addr.str=${BASH_REMATCH[2]}"
+    fi
+    args+=("$arg")
+done
+exec /usr/bin/qemu-system-x86_64 "${args[@]}"

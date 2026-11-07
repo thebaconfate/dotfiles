@@ -18,6 +18,19 @@ elif command -v dnf >/dev/null 2>&1; then
         kernel="$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}\n' kernel-core | sort -V | tail -n 1)"
         sudo akmods --kernels "$kernel"
     fi
+    # os/qemu-stream-netdev works around a QEMU bug: say when QEMU has closed it. Quiet while
+    # it's open, or when GitLab can't be reached.
+    if [[ -n "${QEMU_SYSTEM_X86_64:-}" ]]; then
+        state="$(curl -fsS --max-time 10 \
+            "https://gitlab.com/api/v4/projects/qemu-project%2Fqemu/issues/3285" 2>/dev/null |
+            jq -r '.state' 2>/dev/null || true)"
+        if [[ "$state" == closed ]]; then
+            echo "qemu: the netdev crash colima works around is fixed upstream" \
+                "(https://gitlab.com/qemu-project/qemu/-/work_items/3285)."
+            echo "    Once Fedora's QEMU has the fix: delete os/qemu-stream-netdev and" \
+                "QEMU_SYSTEM_X86_64 in mise/global.toml, then run colima restart"
+        fi
+    fi
 else
     echo "packages: no Homebrew or dnf here, skipped"
 fi
